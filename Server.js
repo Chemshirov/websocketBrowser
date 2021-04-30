@@ -1,9 +1,15 @@
 class Server {
 	constructor() {
-		this.socketLabel = 'browser'
 		this.socketIO = require('socket.io')
 		this.puppeteer = require('puppeteer')
+		
+		this.socketLabel = 'browser'
 		this.port = process.env.PORT
+		this.viewPort = {
+			width: 1920,
+			height: 1080
+		}
+		
 		this._start()
 	}
 	
@@ -11,9 +17,9 @@ class Server {
 		this._startBrowser().then(() => {
 			return this._setSocketServer()
 		}).then(() => {
-			console.log('Socket server has established on port ' + this.port)
-		}).catch(err => {
-			this._error(err)
+			console.log('Socket server has been established on port ' + this.port)
+		}).catch(error => {
+			this._error(error)
 		})
 	}
 	
@@ -22,8 +28,8 @@ class Server {
 			let args = ['--no-sandbox', '--disable-setuid-sandbox', '--explicitly-allowed-ports=81']
 			this.browser = await this.puppeteer.launch({args})
 			success()
-		}).catch(err => {
-			this._error(err)
+		}).catch(error => {
+			this._error(error)
 		})
 	}
 	
@@ -35,8 +41,8 @@ class Server {
 					if (object && object.url) {
 						this._getHtml(object).then(object => {
 							socket.emit(this.socketLabel, object)
-						}).catch(err => {
-							this._error(err)
+						}).catch(error => {
+							this._error(error)
 						})
 					}
 				})
@@ -45,8 +51,8 @@ class Server {
 				this._error(error)
 			})
 			success()
-		}).catch(err => {
-			this._error(err)
+		}).catch(error => {
+			this._error(error)
 		})
 	}
 	
@@ -57,17 +63,15 @@ class Server {
 				error: false
 			}
 			try {
-				let scheme = object.url.replace(/^(http.?\:\/\/)?.*$/, '$1')
-				if (!scheme) {
-					scheme = 'http://'
-				}
-				let url = scheme + object.url
-				
 				let page = await this.browser.newPage()
-				await page.setViewport({
-					width: 1920,
-					height: 1080
-				})
+				await page.setViewport(this.viewPort)
+				
+				let url = object.url
+				let scheme = url.replace(/^(http.?\:\/\/)?.*$/, '$1')
+				if (!scheme) {
+					url = 'http://' + object.url
+				}
+				
 				if (object.cookies) {
 					let cookiesWithUrl = []
 					object.cookies.forEach(cookieObject => {
@@ -76,29 +80,31 @@ class Server {
 					})
 					await page.setCookie(...cookiesWithUrl)
 				}
-				console.log('url', url)
+				
 				await page.goto(url, {
 					waitUntil: 'networkidle0'
 				})
 				if (object.waitForSelector) {
 					await page.waitForSelector(object.waitForSelector)
 				}
+				
 				answer.html = await page.content()
+				
 				if (object.cookies) {
 					await page.deleteCookie(...object.cookies)
 				}
 				await page.close()
-			} catch (err) {
-				answer.error = err.toString()
+			} catch (error) {
+				answer.error = error.toString()
 			}
 			success(answer)
-		}).catch(err => {
-			this._error(err)
+		}).catch(error => {
+			this._error(error)
 		})
 	}
 	
-	_error(err) {
-		console.log(err)
+	_error(error) {
+		console.log(error)
 	}
 }
 
