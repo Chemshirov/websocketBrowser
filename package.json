@@ -1,0 +1,14 @@
+{
+	"name": "browser",
+	"version": "2021.03.19",
+	"description": "Puppeteer socket server",
+	"scripts": {
+		"start": "node files/Server.js"
+	},
+	"license": "MIT",
+	"repository": "no",
+	"dependencies": {
+		"puppeteer": "latest",
+		"socket.io": "latest"
+	}
+}
