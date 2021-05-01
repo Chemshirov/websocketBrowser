@@ -1,5 +1,5 @@
 {
-	"name": "browser",
+	"name": "websocketBrowser",
 	"version": "2021.03.19",
 	"description": "Puppeteer socket server",
 	"scripts": {

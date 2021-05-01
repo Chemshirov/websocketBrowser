@@ -1,20 +1,50 @@
 # Docker image for Pupperteer and Socket.io
-Get html string by emitting socket request with url.
+Get html string by emitting websocket request with url.
 
-#Install
-docker pull chemshirov/websocketBrowser:latest
+### Installation
 
-#Usage
-docker run chemshirov/websocketBrowser:latest
+**1. Install Docker and Docker-compose**
 
+**2. Build an image from a Dockerfile**
+```bash
+	docker build -t websocketBrowser:20210319_213600 ~/websocketBrowser/
+```
+Note: it takes some time, because Chromium has giant dependency bunch.
 
+**3. Alter .yml**
+If You've changed the string at the first task or prefer to use another port.
 
-1. edit package.json
-2. "docker build -t browser:20210319_213600 ~/browser/"
-3. "docker images"
-4. change .yml
-5. 
-	docker-compose -f ~/browser/docker-compose-browser.yml down 1>/dev/null 2>/dev/null
-	docker rm -f browser 1>/dev/null 2>/dev/null
-	docker network disconnect -f browser_network browser 1>/dev/null 2>/dev/null
-	docker-compose -f ~/browser/docker-compose-browser.yml up
+**4. Run .sh**
+```bash
+	~/websocketBrowser/start_git.sh
+```
+Note: attached mode runs by adding a second parameter.
+```bash
+	~/websocketBrowser/start_git.sh show
+```
+
+### Usage
+
+**1. Include example file to you server where Socket.IO client is running**
+
+**2. Initiate browser class**
+```js
+	let Browser = new (require('~/websocketBrowser/' + 'SomewhereElsesExample.js'))({
+		Errors: this.Errors,
+		socketIOclient: this.socketIOclient
+	})
+```
+
+**3. Set a host name or IP of websocketBrowser container**
+```js
+	this.Browser01 = Browser.setHostName(this.hostNameOrIp + ':82')
+```
+Once or not if You have several websocketBrowser containers.
+
+**4. Get HTML string**
+```js
+	this.Browser01.getHtml('example.com/test', '#anyCssSelector').then(html => {
+		console.log(html)
+	})
+```
+Note: css selector is not required.

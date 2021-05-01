@@ -1,15 +1,14 @@
 class Browser {
-	constructor(object) {
-		Object.keys(object).forEach(key => {
-			this[key] = object[key]
-		})
+	constructor({socketIOclient, Errors}) {
+		this.socketIOclient = socketIOclient
+		this.Errors = Errors
 	}
 	
 	setHostName(hostName) {
 		this.hostName = hostName
 	}
 	
-	html(url, selector, cookies) {
+	getHtml(url, selector, cookies) {
 		return new Promise(async success => {
 			let htmler = new Htmler({
 				socketIOclient: this.socketIOclient,
@@ -113,3 +112,4 @@ class Htmler {
 	}
 }
 
+module.exports = Browser

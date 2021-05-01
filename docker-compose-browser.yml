@@ -1,13 +1,13 @@
 version: '2'
 
 services:
-  browser:
+  websocketBrowser:
     restart: unless-stopped
-    image: browser:20210319_213600
-    container_name: browser
+    image: websocketBrowser:20210319_213600
+    container_name: websocketBrowser
     ports:
       - "82:82"
     environment:
       - PORT=82
     volumes:
-      - ~/browser/:/usr/nodejs/files
+      - ~/websocketBrowser/:/usr/nodejs/files
