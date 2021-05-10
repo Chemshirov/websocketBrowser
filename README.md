@@ -5,14 +5,14 @@ Get html string by emitting websocket request with url.
 
 **1. Install Docker and Docker-compose**
 
-**2. Build an image from a Dockerfile**
+**2. Build an image from the Dockerfile**
 ```bash
 docker build -t websocketBrowser:20210319_213600 ~/websocketBrowser/
 ```
 Note: it takes some time, because Chromium has giant dependency bunch.
 
 **3. Alter .yml**
-If you've changed the string at the first task or prefer to use another port.
+If you've changed the string at the second task or prefer to use another port.
 
 **4. Run .sh**
 ```bash
@@ -25,7 +25,7 @@ Note: attached mode runs by adding a second parameter.
 
 ### Usage
 
-**1. Include example file to you server where Socket.IO client is running**
+**1. Include the example file to you server where Socket.IO client is running**
 
 **2. Initiate browser class**
 ```js
@@ -35,7 +35,7 @@ let Browser = new (require('~/websocketBrowser/' + 'SomewhereElsesExample.js'))(
 })
 ```
 
-**3. Set a host name or IP of websocketBrowser container**
+**3. Set a host name or IP of the websocketBrowser container**
 ```js
 this.Browser01 = Browser.setHostName(this.hostNameOrIp + ':82')
 ```
@@ -47,4 +47,5 @@ this.Browser01.getHtml('example.com/test', '#anyCssSelector').then(html => {
 	console.log(html)
 })
 ```
-Note: css selector is not required.
+Note: css selector is not required. Browser will wait for it if present.
+The awaiting limit is 30 seconds.
